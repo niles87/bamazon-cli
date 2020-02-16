@@ -1,9 +1,11 @@
+// required npm modules and files
 require("dotenv").config();
 var key = require("./key");
 var inquirer = require("inquirer");
 var colors = require("colors/safe");
 var mysql = require("mysql");
 
+// connection for mysql database
 var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
@@ -12,12 +14,17 @@ var connection = mysql.createConnection({
   database: "bamazonDB",
 });
 
+// run to add colors to terminal
+colors.enable();
+
+// connect to the database once app has been initialize
 connection.connect(err => {
   if (err) throw err;
-  console.log(`connected as id ${connection.threadId}`);
+  console.log(colors.bgYellow.black(`connected as id ${connection.threadId}`));
   startPrompt();
 });
 
+// once app started display a menu to navigate through
 var startPrompt = () => {
   inquirer
     .prompt({
@@ -44,12 +51,14 @@ var startPrompt = () => {
           addNewProduct();
           break;
         default:
+          console.log(colors.red("\nGood-bye\n"));
           connection.end();
           break;
       }
     });
 };
 
+// displays all product in database
 var displayProductInfo = () => {
   connection.query("SELECT * FROM products", (err, products) => {
     if (err) throw err;
@@ -58,6 +67,7 @@ var displayProductInfo = () => {
   });
 };
 
+// displays only products with a stock of 50 or below
 var lowInventory = () => {
   connection.query("SELECT * FROM products WHERE stock_quantity <=?", [50], (err, products) => {
     if (err) throw err;
@@ -68,6 +78,7 @@ var lowInventory = () => {
   });
 };
 
+// allows user to add stock inventory to a list of products that are low
 var addInventory = () => {
   connection.query("SELECT * FROM products WHERE stock_quantity <=?", [50], (err, response) => {
     if (err) throw err;
@@ -105,7 +116,7 @@ var addInventory = () => {
           [{ stock_quantity: newQuantity }, { product_name: productToUpdate.product_name }],
           err => {
             if (err) throw err;
-            console.log("\nStock Updated.\n");
+            console.log(colors.green("\nStock Updated.\n"));
             startPrompt();
           }
         );
@@ -113,6 +124,7 @@ var addInventory = () => {
   });
 };
 
+// allows user to add a new product to the database
 var addNewProduct = () => {
   inquirer
     .prompt([
@@ -123,8 +135,9 @@ var addNewProduct = () => {
       },
       {
         name: "department",
-        type: "input",
+        type: "list",
         message: "What department does it belong in?",
+        choices: ["clothes", "electronics", "grocery", "self care", "general"],
       },
       {
         name: "price",
@@ -148,7 +161,7 @@ var addNewProduct = () => {
         },
         err => {
           if (err) throw err;
-          console.log("\nYour Product was added\n");
+          console.log(colors.green("\nYour Product was added\n"));
           startPrompt();
         }
       );
