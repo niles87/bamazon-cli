@@ -32,7 +32,7 @@ var addToShoppingCart = () => {
   inquirer
     .prompt([
       {
-        message: "Enter the ID of the product you'd like to add.",
+        message: "Enter the ID of the product you'd like to add to your cart.",
         name: "product-id",
         validate: value => {
           if (isNaN(value) === false) {
@@ -61,16 +61,17 @@ var addToShoppingCart = () => {
           connection.query(
             "UPDATE products SET ? WHERE ?",
             [{ stock_quantity: newStockQuantity }, { id: answers["product-id"] }],
-            (err, res) => {
+            err => {
               if (err) throw err;
               console.log(colors.green.underline("\nAmount owed: $" + customerCost));
               console.log(colors.green("\nThanks for your business!\n"));
+              connection.end();
             }
           );
         } else {
           console.log(colors.red("\nWe don't have enough in stock\n"));
+          addToShoppingCart();
         }
-        connection.end();
       });
     });
 };
