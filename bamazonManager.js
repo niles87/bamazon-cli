@@ -59,18 +59,57 @@ var displayProductInfo = () => {
 };
 
 var lowInventory = () => {
-  connection.query("", (err, inventory) => {
+  connection.query("SELECT * FROM products WHERE stock_quantity <=?", [50], (err, products) => {
     if (err) throw err;
-    console.log(inventory);
+    console.log("\n");
+    console.log(products);
+    console.log("\n");
     startPrompt();
   });
 };
 
 var addInventory = () => {
-  connection.query("", (err, response) => {
+  connection.query("SELECT * FROM products WHERE stock_quantity <=?", [50], (err, response) => {
     if (err) throw err;
-    console.log(response);
-    startPrompt();
+    console.log("\n");
+    inquirer
+      .prompt([
+        {
+          name: "product",
+          type: "list",
+          message: "Which product needs more in stock?",
+          choices: () => {
+            var arr = [];
+            for (var i = 0; i < response.length; i++) {
+              arr.push(response[i].product_name);
+            }
+            return arr;
+          },
+        },
+        {
+          name: "quantity",
+          type: "input",
+          message: "How much is being added?",
+        },
+      ])
+      .then(answers => {
+        var productToUpdate;
+        for (var j = 0; j < response.length; j++) {
+          if (response[j].product_name === answers.product) {
+            productToUpdate = response[j];
+          }
+        }
+        var newQuantity = parseInt(productToUpdate.stock_quantity) + parseInt(answers.quantity);
+        connection.query(
+          "UPDATE products SET ? WHERE ?",
+          [{ stock_quantity: newQuantity }, { product_name: productToUpdate.product_name }],
+          err => {
+            if (err) throw err;
+            console.log("\nStock Updated.\n");
+            startPrompt();
+          }
+        );
+      });
   });
 };
 
@@ -109,7 +148,7 @@ var addNewProduct = () => {
         },
         err => {
           if (err) throw err;
-          console.log("Your Product was added");
+          console.log("\nYour Product was added\n");
           startPrompt();
         }
       );
