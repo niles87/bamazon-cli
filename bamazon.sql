@@ -20,6 +20,6 @@ VALUES ("shampoo", "self care", 5.00, 100),
  ("cereal", "grocery", 2.50, 100),
  ("jeans", "clothes", 50.00, 500),
  ("t-shirt", "clothes", 15.00, 150),
- ("bamazon tv", "electronics", 500.00, 50),
+ ("bamazon TV", "electronics", 500.00, 50),
  ("bPhone", "electronics", 1000.00, 60),
- ("bMac", "electronics", 2500.00, 40);
+ ("bComp", "electronics", 2500.00, 40);
