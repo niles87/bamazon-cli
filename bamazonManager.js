@@ -18,10 +18,6 @@ var connection = mysql.createConnection({
 // run to add colors to terminal
 colors.enable();
 
-var tableHeaders = ["id", "  product  ", "  department  ", "price", "stock", " sales "];
-var table = new Table({ head: tableHeaders });
-var element;
-
 // connect to the database once app has been initialize
 connection.connect(err => {
   if (err) throw err;
@@ -67,6 +63,9 @@ var startPrompt = () => {
 
 // displays all product in database
 var displayProductInfo = () => {
+  var tableHeaders = ["id", "  product  ", "  department  ", "price", "stock", " sales "];
+  var table = new Table({ head: tableHeaders });
+  var element;
   connection.query("SELECT * FROM products", (err, products) => {
     if (err) throw err;
     products.forEach(e => {
@@ -87,11 +86,16 @@ var displayProductInfo = () => {
 
 // displays only products with a stock of 50 or below
 var lowInventory = () => {
-  connection.query("SELECT * FROM products WHERE stock_quantity <= ?", [50], (err, products) => {
+  var tableHeaders = ["id", "  product  ", "  department  ", "stock"];
+  var table = new Table({ head: tableHeaders });
+  var element;
+  connection.query("SELECT * FROM products WHERE stock_quantity <= ?", [50], (err, lowI) => {
     if (err) throw err;
-    console.log("\n");
-    console.log(products);
-    console.log("\n");
+    lowI.forEach(e => {
+      element = new Array(e.id, e.product_name, e.department_name, e.stock_quantity);
+      table.push(element);
+      console.log(table.toString());
+    });
     startPrompt();
   });
 };
