@@ -128,44 +128,54 @@ var addInventory = () => {
 
 // allows user to add a new product to the products database
 var addNewProduct = () => {
-  inquirer
-    .prompt([
-      {
-        name: "product",
-        type: "input",
-        message: "What is the name of the product?",
-      },
-      {
-        name: "department",
-        type: "list",
-        message: "What department does it belong in?",
-        choices: ["clothes", "electronics", "grocery", "self care"],
-      },
-      {
-        name: "price",
-        type: "input",
-        message: "How much are we selling it for?",
-      },
-      {
-        name: "quantity",
-        type: "input",
-        message: "How many are we going to have in stock?",
-      },
-    ])
-    .then(reply => {
-      connection.query(
-        "INSERT INTO products SET ?",
+  connection.query("SELECT * FROM departments", (err, res) => {
+    if (err) throw err;
+    inquirer
+      .prompt([
         {
-          product_name: reply.product,
-          department_name: reply.department,
-          price: parseFloat(reply.price),
-          stock_quantity: parseInt(reply.quantity),
+          name: "product",
+          type: "input",
+          message: "What is the name of the product?",
         },
-        err => {
-          if (err) throw err;
-          console.log(colors.green("\nYour Product was added\n"));
-          startPrompt();
-        }
-      );
-    });
+        {
+          name: "department",
+          type: "list",
+          message: "What department does it belong in?",
+          choices: () => {
+            var choiceArray = [];
+            res.forEach(el => {
+              choiceArray.push(el.department_name);
+            });
+            return choiceArray;
+          },
+        },
+        {
+          name: "price",
+          type: "input",
+          message: "How much are we selling it for?",
+        },
+        {
+          name: "quantity",
+          type: "input",
+          message: "How many are we going to have in stock?",
+        },
+      ])
+      .then(reply => {
+        connection.query(
+          "INSERT INTO products SET ?",
+          {
+            product_name: reply.product,
+            department_name: reply.department,
+            price: parseFloat(reply.price),
+            stock_quantity: parseInt(reply.quantity),
+            product_sales: 0,
+          },
+          err => {
+            if (err) throw err;
+            console.log(colors.green("\nYour Product was added\n"));
+            startPrompt();
+          }
+        );
+      });
+  });
 };
