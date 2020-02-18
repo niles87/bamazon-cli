@@ -4,6 +4,7 @@ var key = require("./key");
 var inquirer = require("inquirer");
 var colors = require("colors/safe");
 var mysql = require("mysql");
+var Table = require("cli-table");
 
 // connection for mysql database
 var connection = mysql.createConnection({
@@ -16,6 +17,10 @@ var connection = mysql.createConnection({
 
 // run to add colors to terminal
 colors.enable();
+
+var tableHeaders = ["id", "  product  ", "  department  ", "price", "stock", " sales "];
+var table = new Table({ head: tableHeaders });
+var element;
 
 // connect to the database once app has been initialize
 connection.connect(err => {
@@ -64,7 +69,18 @@ var startPrompt = () => {
 var displayProductInfo = () => {
   connection.query("SELECT * FROM products", (err, products) => {
     if (err) throw err;
-    console.log(products);
+    products.forEach(e => {
+      element = new Array(
+        e.id,
+        e.product_name,
+        e.department_name,
+        e.price,
+        e.stock_quantity,
+        e.product_sales
+      );
+      table.push(element);
+      console.log(table.toString());
+    });
     startPrompt();
   });
 };
