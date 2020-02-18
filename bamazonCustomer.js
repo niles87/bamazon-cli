@@ -3,6 +3,7 @@ var key = require("./key");
 var inquirer = require("inquirer");
 var colors = require("colors/safe");
 var mysql = require("mysql");
+var Table = require("cli-table");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -14,6 +15,10 @@ var connection = mysql.createConnection({
 
 colors.enable();
 
+var tableHeaders = ["id", "  product  ", "  department  ", "price", "stock"];
+var table = new Table({ head: tableHeaders });
+var element;
+
 connection.connect(err => {
   if (err) throw err;
   console.log(colors.yellow(`connected as id ${connection.threadId}`));
@@ -23,7 +28,11 @@ connection.connect(err => {
 var displayProductInfo = () => {
   connection.query("SELECT * FROM products", (err, res) => {
     if (err) throw err;
-    console.log(res);
+    res.forEach(e => {
+      element = new Array(e.id, e.product_name, e.department_name, e.price, e.stock_quantity);
+      table.push(element);
+      console.log(table.toString());
+    });
     addToShoppingCart();
   });
 };
@@ -57,6 +66,7 @@ var addToShoppingCart = () => {
         if (err) throw err;
         var newStockQuantity = res[0].stock_quantity - answers.quantity;
         var customerCost = res[0].price * answers.quantity;
+        var productSales = res[0].product_sales + customerCost;
         if (answers.quantity <= res[0].stock_quantity) {
           connection.query(
             "UPDATE products SET ? WHERE ?",
@@ -65,7 +75,14 @@ var addToShoppingCart = () => {
               if (err) throw err;
               console.log(colors.green.underline("\nAmount owed: $" + customerCost));
               console.log(colors.green("\nThanks for your business!\n"));
-              connection.end();
+              connection.query(
+                "UPDATE products SET ? WHERE ?",
+                [{ product_sales: productSales }, { id: answers["product-id"] }],
+                err => {
+                  if (err) throw err;
+                  connection.end();
+                }
+              );
             }
           );
         } else {
