@@ -78,8 +78,8 @@ var displayProductInfo = () => {
         e.product_sales
       );
       table.push(element);
-      console.log(table.toString());
     });
+    console.log("\n" + table.toString() + "\n");
     startPrompt();
   });
 };
@@ -94,8 +94,8 @@ var lowInventory = () => {
     lowI.forEach(e => {
       element = new Array(e.id, e.product_name, e.department_name, e.stock_quantity);
       table.push(element);
-      console.log(table.toString());
     });
+    console.log("\n" + table.toString() + "\n");
     startPrompt();
   });
 };
