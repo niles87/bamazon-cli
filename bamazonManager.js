@@ -51,8 +51,10 @@ var startPrompt = () => {
           addNewProduct();
           break;
         default:
-          console.log(colors.red("\nGood-bye\n"));
-          connection.end();
+          connection.end(err => {
+            if (err) throw err;
+            console.log(colors.red("\nDisconnected\n"));
+          });
           break;
       }
     });
@@ -69,7 +71,7 @@ var displayProductInfo = () => {
 
 // displays only products with a stock of 50 or below
 var lowInventory = () => {
-  connection.query("SELECT * FROM products WHERE stock_quantity <=?", [50], (err, products) => {
+  connection.query("SELECT * FROM products WHERE stock_quantity <= ?", [50], (err, products) => {
     if (err) throw err;
     console.log("\n");
     console.log(products);
@@ -80,7 +82,7 @@ var lowInventory = () => {
 
 // allows user to add stock inventory to a list of products that are low
 var addInventory = () => {
-  connection.query("SELECT * FROM products WHERE stock_quantity <=?", [50], (err, response) => {
+  connection.query("SELECT * FROM products WHERE stock_quantity <= ?", [50], (err, response) => {
     if (err) throw err;
     console.log("\n");
     inquirer
@@ -91,9 +93,9 @@ var addInventory = () => {
           message: "Which product needs more in stock?",
           choices: () => {
             var arr = [];
-            for (var i = 0; i < response.length; i++) {
-              arr.push(response[i].product_name);
-            }
+            response.forEach(element => {
+              arr.push(element.product_name);
+            });
             return arr;
           },
         },
@@ -124,7 +126,7 @@ var addInventory = () => {
   });
 };
 
-// allows user to add a new product to the database
+// allows user to add a new product to the products database
 var addNewProduct = () => {
   inquirer
     .prompt([
@@ -137,7 +139,7 @@ var addNewProduct = () => {
         name: "department",
         type: "list",
         message: "What department does it belong in?",
-        choices: ["clothes", "electronics", "grocery", "self care", "general"],
+        choices: ["clothes", "electronics", "grocery", "self care"],
       },
       {
         name: "price",
