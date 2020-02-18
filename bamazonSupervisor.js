@@ -106,7 +106,9 @@ var createDepartment = () => {
         },
         err => {
           if (err) throw err;
-          console.log(colors.bgGreen("                  \n Department Added \n                  "));
+          console.log(
+            colors.bgGreen.black("                  \n Department Added \n                  ")
+          );
           menuPrompt();
         }
       );
