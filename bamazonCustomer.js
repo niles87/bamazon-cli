@@ -31,8 +31,8 @@ var displayProductInfo = () => {
     res.forEach(e => {
       element = new Array(e.id, e.product_name, e.department_name, e.price, e.stock_quantity);
       table.push(element);
-      console.log(table.toString());
     });
+    console.log(table.toString());
     addToShoppingCart();
   });
 };
