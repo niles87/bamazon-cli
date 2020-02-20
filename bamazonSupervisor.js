@@ -64,7 +64,7 @@ var menuPrompt = () => {
 
 var viewProductSales = () => {
   connection.query(
-    "SELECT departments.department_name, departments.department_id, departments.over_head_costs, SUM(products.product_sales) AS sales, (SUM(products.product_sales) - departments.over_head_costs) AS profit FROM	departments INNER JOIN products ON departments.department_name = products.department_name GROUP BY departments.department_id, departments.over_head_costs;",
+    "SELECT departments.department_name, departments.department_id, departments.over_head_costs, SUM(products.product_sales) AS sales, (SUM(products.product_sales) - departments.over_head_costs) AS profit FROM	departments INNER JOIN products ON departments.department_name = products.department_name GROUP BY departments.department_id, departments.over_head_costs ORDER BY departments.department_id;",
     (err, res) => {
       if (err) throw err;
       res.forEach(e => {
