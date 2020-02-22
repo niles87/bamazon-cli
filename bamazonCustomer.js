@@ -54,7 +54,7 @@ var addToShoppingCart = () => {
         message: "Please enter the quantity desired.",
         name: "quantity",
         validate: value => {
-          if (isNaN(value) === false) {
+          if (isNaN(value) === false && value > 0) {
             return true;
           }
           return false;
