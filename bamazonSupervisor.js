@@ -95,6 +95,12 @@ var createDepartment = () => {
         name: "overhead",
         type: "input",
         message: "What is the overhead cost?",
+        validate: value => {
+          if (isNaN(value) === false && value > 0) {
+            return true;
+          }
+          return false;
+        },
       },
     ])
     .then(answers => {

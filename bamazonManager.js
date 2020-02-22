@@ -123,6 +123,12 @@ var addInventory = () => {
           name: "quantity",
           type: "input",
           message: "How much is being added?",
+          validate: value => {
+            if (isNaN(value) === false && value > 0) {
+              return true;
+            }
+            return false;
+          },
         },
       ])
       .then(answers => {
@@ -173,11 +179,23 @@ var addNewProduct = () => {
           name: "price",
           type: "input",
           message: "How much are we selling it for?",
+          validate: value => {
+            if (isNaN(value) === false && value > 0) {
+              return true;
+            }
+            return false;
+          },
         },
         {
           name: "quantity",
           type: "input",
-          message: "How many are we going to have in stock?",
+          message: "How many are we going to stock?",
+          validate: value => {
+            if (isNaN(value) === false && value > 0) {
+              return true;
+            }
+            return false;
+          },
         },
       ])
       .then(reply => {
