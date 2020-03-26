@@ -26,7 +26,7 @@ Bamazon-cli is a `node` command line app that uses a `mySQL` database to view an
 
 ## How To Use
 
-Initialize the app by running `npm install` or `npm i` to download all the files needed. Then start by using `node` followed by the desired file `bamazonCustomer.js`, `bamazonManager.js`, or `bamazon.Supervisor.js`.
+Initialize the app by running `npm install` or `npm i` to download all the files needed. Then start by using `node` followed by the desired file `bamazonCustomer.js`, `bamazonManager.js`, or `bamazonSupervisor.js`.
 
 1. Customer
 
