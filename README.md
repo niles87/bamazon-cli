@@ -3,22 +3,22 @@
 ## App Visuals
 
 <p>Customers Screen</p>
-<img src="images/customer_walkthrough.gif">
+<p align='center'><img src="images/customer_walkthrough.gif"></p>
 
 <p>Manager View Products</p>
-<img src="images/manager_view_products.gif">
+<p align='center'><img src="images/manager_view_products.gif"></p>
 
 <p>Manager Low Inventory</p>
-<img src="images/manager_low_products.gif">
+<p align='center'><img src="images/manager_low_products.gif"></p>
 
 <p>Manager Add Inventory</p>
-<img src="images/manager_add_inventory.gif">
+<p align='center'><img src="images/manager_add_inventory.gif"></p>
 
 <p>Manager Add New Product</p>
-<img src="images/manager_add_product.gif">
+<p align='center'><img src="images/manager_add_product.gif"></p>
 
 <p>Supervisors Screen</p>
-<img src="images/supervisor_walkthrough.gif">
+<p align='center'><img src="images/supervisor_walkthrough.gif"></p>
 
 ## Overview
 
